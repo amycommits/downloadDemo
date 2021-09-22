@@ -14,6 +14,13 @@
          <img :src="link" width="400" height="500"/>
       </button>
     </fieldset>
+    <fieldset>
+      <legend>Ugly JS</legend>
+      <button @click="uglyJsFetch">
+         <img :src="link" width="400" height="500"/>
+      </button>
+
+    </fieldset>
   </div>
 </template>
 
@@ -34,12 +41,26 @@ export default {
         'content-type': 'application/json',
       },
       params: JSON.stringify({imgLink: this.link})
-    }
-    return axios.request(options).then((response) => {
-      console.log({response})
-      return response
-    }).catch((error) => { return error })
-    }
-  }
-}
+      }
+      return axios.request(options).then((response) => {
+        console.log({response})
+        return response
+      }).catch((error) => { return error })
+    },
+    uglyJsFetch () {
+      axios({
+        url: this.link,
+        method: 'GET',
+        responseType: 'blob', // important
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'file.pdf');
+        document.body.appendChild(link);
+        link.click();
+      });
+          }
+        }
+      }
 </script>
