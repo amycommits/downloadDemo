@@ -19,7 +19,12 @@
       <button @click="uglyJsFetch">
          <img :src="link" width="400" height="500"/>
       </button>
-
+    </fieldset>
+    <fieldset>
+      <legend>More Ugly JS</legend>
+      <button @click="moreUgly">
+         <img :src="link" width="400" height="500"/>
+      </button>
     </fieldset>
   </div>
 </template>
@@ -60,7 +65,25 @@ export default {
         document.body.appendChild(link);
         link.click();
       });
-          }
-        }
+    },
+    moreUgly() {
+      const options = {
+      method: 'POST',
+      url: '/api/ugly',
+      headers: {
+        'content-type': 'application/json',
+      },
+      params: JSON.stringify({imgLink: this.link})
       }
+      return axios.request(options).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'file.pdf');
+        document.body.appendChild(link);
+        link.click();
+      }).catch((error) => { return error })
+    }
+  }
+}
 </script>
